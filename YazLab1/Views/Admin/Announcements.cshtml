@@ -1,0 +1,200 @@
+﻿@model List<YazLab1.Models.Data.Models.Announcement>
+
+@{
+    ViewBag.Title = "Tüm Duyurular";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<div class="panel-heading">
+    <b>Tüm Duyurular </b>
+    @if (@TempData["add"] != null)
+    {
+        <b>(Duyuru Başarıyla Eklendi!)</b>
+    }
+    @if (@TempData["edit"] != null)
+    {
+        <b>(Duyuru Başarıyla Düzenlendi!)</b>
+    }
+    <a class="btn-primary btn" href="@Url.Action("AddAnnouncement", "Admin")" style="float:right;text-decoration:none">Yeni Duyuru Ekle</a>
+</div>
+<div class="panel-body">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#genel" data-toggle="tab">Genel Duyurular</a>
+        </li>
+        <li>
+            <a href="#bolum" data-toggle="tab">Bölüm Duyuruları</a>
+        </li>
+        <li>
+            <a href="#haber" data-toggle="tab">Haberler ve Etkinlikler</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="genel">
+            <div class="table-responsive" style="margin-top:10px;">
+                <table class="table table-striped table-bordered table-hover" id="myTable">
+                    <thead>
+                        <tr>
+                            <th>Duyuru Başlığı</th>
+                            <th>Duyuru Metni</th>
+                            <th>Oluşturan</th>
+                            <th>Oluşturma Tarihi</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Where(a => a.tip == "1"))
+                        {
+                            <tr>
+                                <td>@item.DuyuruBasligi</td>
+                                <td>@Html.Raw(@item.DuyuruMetni)</td>
+                                <td>@item.Olusturan</td>
+                                <td>@DateTime.ParseExact(@item.CreateDate, "dd.MM.yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).ToString("dd MMMM dddd yyyy HH:mm")</td>
+                                <td><a href="@Url.Action("EditAnnouncement", "Admin", new { id = @item.AnnouncementId})" target="_blank">Düzenle</a></td>
+                                <td><a href="#" onclick="TurSil(@item.AnnouncementId)">Sil</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="bolum">
+            <div class="table-responsive" style="margin-top:10px;">
+                <table class="table table-striped table-bordered table-hover" id="myTable2">
+                    <thead>
+                        <tr>
+                            <th>Duyuru Başlığı</th>
+                            <th>Duyuru Metni</th>
+                            <th>Oluşturan</th>
+                            <th>Oluşturma Tarihi</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Where(a => a.tip == "2"))
+                        {
+                            <tr>
+                                <td>@item.DuyuruBasligi</td>
+                                <td>@Html.Raw(@item.DuyuruMetni)</td>
+                                <td>@item.Olusturan</td>
+                                <td>@DateTime.ParseExact(@item.CreateDate, "dd.MM.yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).ToString("dd MMMM dddd yyyy HH:mm")</td>
+                                <td><a href="@Url.Action("EditAnnouncement", "Admin", new { id = @item.AnnouncementId})" target="_blank">Düzenle</a></td>
+                                <td><a href="#" onclick="TurSil(@item.AnnouncementId)">Sil</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="haber">
+            <div class="table-responsive" style="margin-top:10px;">
+                <table class="table table-striped table-bordered table-hover" id="myTable3">
+                    <thead>
+                        <tr>
+                            <th>Duyuru Başlığı</th>
+                            <th>Duyuru Metni</th>
+                            <th>Oluşturan</th>
+                            <th>Oluşturma Tarihi</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Where(a => a.tip == "3"))
+                        {
+                            <tr>
+                                <td>@item.DuyuruBasligi</td>
+                                <td>@Html.Raw(@item.DuyuruMetni)</td>
+                                <td>@item.Olusturan</td>
+                                <td>@DateTime.ParseExact(@item.CreateDate, "dd.MM.yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).ToString("dd MMMM dddd yyyy HH:mm")</td>
+                                <td><a href="@Url.Action("EditAnnouncement", "Admin", new { id = @item.AnnouncementId})" target="_blank">Düzenle</a></td>
+                                <td><a href="#" onclick="TurSil(@item.AnnouncementId)">Sil</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    var table, table2, table3;
+    $(document).ready(function () {
+        table = $('#myTable').DataTable({
+            "lengthMenu": [[5, 10, 20, -1], [5, 10, 20, "Hepsi"]],
+            "order": [[1,"desc" ]],
+            language: {
+                search: "Ara: ",
+                sInfo: " _START_ ve _END_ arasından toplam _TOTAL_ tane gösteriliyor",
+                sLengthMenu: "_MENU_ tane göster",
+                sEmptyTable: "Hiç Bir Sonuç Bulunamadı",
+                paginate: {
+                    previous: "Geri",
+                    next: "İleri",
+                },
+                sZeroRecords: "Hiç Bir Sonuç Bulunamadı",
+                sEmptyTable: "Eşleşen Sonuç Yok",
+                sInfoFiltered: "(Filtrelenen toplam _MAX_ taneden)",
+                sInfoEmpty: "0 sonuç gösteriliyor"
+            },
+        });
+        table2 = $('#myTable2').DataTable({
+            "lengthMenu": [[5, 10, 20, -1], [5, 10, 20, "Hepsi"]],
+            "order": [[1, "desc"]],
+            language: {
+                search: "Ara: ",
+                sInfo: " _START_ ve _END_ arasından toplam _TOTAL_ tane gösteriliyor",
+                sLengthMenu: "_MENU_ tane göster",
+                sEmptyTable: "Hiç Bir Sonuç Bulunamadı",
+                paginate: {
+                    previous: "Geri",
+                    next: "İleri",
+                },
+                sZeroRecords: "Hiç Bir Sonuç Bulunamadı",
+                sEmptyTable: "Eşleşen Sonuç Yok",
+                sInfoFiltered: "(Filtrelenen toplam _MAX_ taneden)",
+                sInfoEmpty: "0 sonuç gösteriliyor"
+            },
+        });
+        table3 = $('#myTable3').DataTable({
+            "lengthMenu": [[5, 10, 20, -1], [5, 10, 20, "Hepsi"]],
+            "order": [[1, "desc"]],
+            language: {
+                search: "Ara: ",
+                sInfo: " _START_ ve _END_ arasından toplam _TOTAL_ tane gösteriliyor",
+                sLengthMenu: "_MENU_ tane göster",
+                sEmptyTable: "Hiç Bir Sonuç Bulunamadı",
+                paginate: {
+                    previous: "Geri",
+                    next: "İleri",
+                },
+                sZeroRecords: "Hiç Bir Sonuç Bulunamadı",
+                sEmptyTable: "Eşleşen Sonuç Yok",
+                sInfoFiltered: "(Filtrelenen toplam _MAX_ taneden)",
+                sInfoEmpty: "0 sonuç gösteriliyor"
+            },
+        });
+    });
+
+    function TurSil(id) {
+        if (confirm('Duyuru silinsin mi?')) {
+            var turId = id;
+            jQuery.ajax({
+                url: '@Url.Action("DeleteAnnouncement", "Admin")',
+                data: { id: turId }
+            }).done(function (val) {
+                if (val == "yes") {
+                    alert("Kaydedildi.");
+                    location.reload(true);
+                }
+                else { alert("Bir Hata Oluştu!"); location.reload(true); }
+            });
+        }
+        else { }
+    }
+</script>

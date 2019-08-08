@@ -1,0 +1,92 @@
+﻿@model YazLab1.Models.SliderDataModel
+
+@{
+    ViewBag.Title = "Slider Resmi Düzenle";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+
+<div class="panel-heading">
+    <b>Slider Resmi Düzenle</b>
+</div>
+
+@using (Ajax.BeginForm("EditSliderItem", "Admin", new AjaxOptions { OnSuccess = "onSuccess", UpdateTargetId = "parentDiv" }, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.AntiForgeryToken()
+
+    <div class="panel-body col-lg-4" id="parentDiv">
+
+        @Html.HiddenFor(model => model.Id)
+        @*<input type="hidden" name="Item2.Id" value="@Model.Id" />*@
+
+        <div class="form-group" id="mainImageDiv">
+            <p class="help-block"><b>Slider Resmi</b></p>
+            @Html.TextBoxFor(model => model.image, null, new { @type = "file", @class = "form-control", @id = "mainImageInput", })
+            @Html.ValidationMessageFor(model => model.image)
+            <div class="imageTools">
+                @if (!string.IsNullOrEmpty(@Model.imageUrl))
+                {
+                    <div class='tools'>
+                        <img class='img-responsive' height='300' id='mainImage' style='margin-top:5px' src="@Model.imageUrl" />
+                        <input class='removeFile form-control' type='button' value='Kaldır' />
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <p class="help-block"><b>Başlık</b></p>
+            @Html.TextBoxFor(model => model.baslik, new { @class = "form-control", @placeholder = "Başlık" })
+            @*<input class="form-control" type="text" name="Item2.baslik" value="@Model.baslik" placeholder="Başlık" />*@
+            @Html.ValidationMessageFor(model => Model.baslik)
+        </div>
+
+        <div class="form-group">
+            <p class="help-block"><b>Yazı</b></p>
+            @Html.TextBoxFor(model => model.yazi, new { @class = "form-control", @placeholder = "Yazı" })
+            @*<input class="form-control" type="text" name="Item2.yazi" value="@Model.yazi" placeholder="Yazı" />*@
+            @Html.ValidationMessageFor(model => Model.yazi)
+        </div>
+
+        <div class="form-group">
+            <p class="help-block"><b>Url</b></p>
+            @Html.TextBoxFor(model => model.url, new { @class = "form-control", @placeholder = "Url" })
+            @*<input class="form-control" type="text" name="Item2.url" value="@Model.url" placeholder="Url" />*@
+            @Html.ValidationMessageFor(model => Model.url)
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-success btn-lg btn-block" value="Kaydet" />
+        </div>
+    </div>
+}
+
+
+<script type="text/javascript">
+    function onSuccess(result) {
+        $.validator.unobtrusive.parse($(result));
+    }
+
+    $('#mainImageInput').change(function (e) {
+        $('.imageTools .removeFile').parent().remove();
+        $('.imageTools').append("<div class='tools'><img class='img-responsive' height='300' id='mainImage' style='margin-top:5px' /><input class='removeFile form-control' type='button' class='form-control' value='Kaldır' /></div>");
+        showFakeImage(this, '#mainImage', 0);
+    });
+
+    $('.imageTools').on('click', '.removeFile', function (e) {
+        e.preventDefault();
+        $(this).parent().remove();
+        $('#mainImageInput').val('');
+    });
+
+    function showFakeImage(input, imgId, index) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $(imgId).attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[index]);
+        }
+    }
+</script>

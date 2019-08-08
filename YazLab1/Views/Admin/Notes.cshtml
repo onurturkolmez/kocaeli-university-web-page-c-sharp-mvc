@@ -1,0 +1,68 @@
+﻿@model YazLab1.Models.Data.Models.User
+
+@{
+    ViewBag.Title = "Notlarım";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+
+<div class="panel-heading">
+    <b>Notlarım</b>
+</div>
+
+<input type="hidden" id="id" value="@Model.UserId" />
+
+<div class="panel-body col-lg-7">
+    <div class="form-group">
+        <textarea id="note" rows="7" style="resize:none" class="form-control">@Model.note</textarea>
+        <a id="btnLinkEkle" class="btn btn-default">Link Ekle</a>
+        <a id="btnKoyu" class="btn btn-default">Koyu Yaz</a>
+        <a id="btnAltiniCiz" class="btn btn-default">Altını Çiz</a>
+        <a id="btnSatir" class="btn btn-default">Satır Atla</a>
+        <a id="btnCls" class="btn btn-default">Tümünü Sil</a>
+    </div>
+
+    <div class="form-group">
+        <a onclick="save()" id="btnUrunKaydet" class="btn btn-success btn-lg btn-block">Kaydet</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#btnLinkEkle').click(function () {
+        var text = $('textarea#note').val();
+        $('textarea#note').val(text + '<a target="_blank" href="Gideceği Adresi Buraya Yapıştırın">Verilen Linkin Adını Buraya Yapıştırın</a>');
+    });
+
+    $('#btnKoyu').click(function () {
+        var text = $('textarea#note').val();
+        $('textarea#note').val(text + '<b>Buraya Koyu Yazıyı Yapıştır</b>');
+    });
+
+    $('#btnAltiniCiz').click(function () {
+        var text = $('textarea#note').val();
+        $('textarea#note').val(text + '<u>Buraya Altı Çizili Yazıyı Yapıştır</u>');
+    });
+
+    $('#btnSatir').click(function () {
+        var text = $('textarea#note').val();
+        $('textarea#note').val(text + '<br />');
+    });
+
+    $('#btnCls').click(function () {
+        $('textarea#note').val('');
+    });
+</script>
+
+<script>
+    function save() {
+        var id = $('#id').val();
+        var note = $('#note').val();
+        jQuery.ajax({
+            url: '@Url.Action("UserNoteSave", "Admin")',
+            data: { Id: id, Note: note }
+        }).done(function (val) {
+            if (val == "basarili") { alert("Not Güncellendi"); location.reload(true); }
+            else { alert("bir hata oluştu"); location.reload(true); }
+        });
+    }
+</script>

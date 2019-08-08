@@ -1,0 +1,87 @@
+﻿@model List<YazLab1.Models.Data.Models.Announcement>
+<link href="~/HomeContent/bootstrap.min.css" rel="stylesheet" />
+<link href="~/AdminContent/font-awesome/css/font-awesome.css" rel="stylesheet">
+<html lang="en">
+<body style="text-align:center">
+    <h2 style="text-align:center;" class="featurette-heading"><a class="btn btn-success" href="@Url.Action("Index","Home")">Geri Dön</a> Arama Sonucu(<small>@Model.Count tane listeledik</small>)</h2>
+    <div style="max-width:500px;display:inline-block;float:none;" class="col-lg-6">
+        @if (@Model.FirstOrDefault() != null)
+        {
+            foreach (var item in @Model)
+            {
+                <div class="panel panel-primary arama">
+                    <div class="panel-heading" style="text-align:left;">
+                        <a href="#" style="color:#fff" data-value="@item.AnnouncementId">
+                            <i class="fa fa-comments"></i>
+                            @item.DuyuruBasligi
+                        </a>
+                    </div>
+                    <div class="panel-footer" style="text-align:left;">
+                        <span>
+                            <b>
+                                <i class="fa fa-user"></i>
+                                @item.Olusturan
+                            </b>
+                        </span>
+                        <span style="float:right">
+                            <i class="fa fa-calendar"></i>
+                            @DateTime.ParseExact(@item.CreateDate, "dd.MM.yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).ToString("dd MMMM dddd")
+                        </span>
+                    </div>
+                </div>
+            }
+
+            <button style="margin-bottom:15px;" id="moreArama" type="button" class="btn btn-success btn-block">Daha Fazla Yükle</button>
+        }
+        else
+        {
+            <p class="featurette-heading">Malesef aradığın kriterlere göre hiç bir şey bulunamadı.</p>
+        }
+    </div>
+
+    <div class="modal fade modal-wide" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document" style="">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/HomeContent/jquery-1.9.1.min.js"></script>
+<script src="~/HomeContent/bootstrap.min.js"></script>
+<script src="~/HomeContent/docs.min.js"></script>
+<script src="~/HomeContent/ie10-viewport-bug-workaround.js"></script>
+
+<style>
+    .panel-primary {
+        display: none;
+    }
+</style>
+
+<script>
+    $(function () {
+        $(".arama").slice(0, 4).show();
+        $("#moreArama").on('click', function (e) {
+            e.preventDefault();
+            $(".arama:hidden").slice(0, 1).slideDown();
+            if ($("arama:hidden").length == 0) {
+                $("#load").fadeOut('slow');
+            }
+            $('html,body').animate({
+                scrollTop: $(this).offset().top
+            }, 1500);
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.panel-heading > a').click(function () {
+            var id = $(this).data("value");
+            $('.modal-content').load("/Home/DuyuruPopup/" + id,
+                function () {
+                    $('#myModal').modal("show");
+                });
+        });
+    });
+</script>

@@ -1,0 +1,13 @@
+﻿@model YazLab1.Models.Data.Models.Announcement
+<div class="modal-content">
+    <div class="modal-header" style="background-color:darkgreen;">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" style="color:#fff;">@Model.DuyuruBasligi</h4>
+    </div>
+    <div class="modal-body">
+        <p>@Html.Raw(@Model.DuyuruMetni)</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+    </div>
+</div>

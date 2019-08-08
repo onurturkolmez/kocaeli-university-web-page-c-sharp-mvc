@@ -1,0 +1,149 @@
+﻿@model List<YazLab1.Models.Data.Models.User>
+
+@{
+    ViewBag.Title = "Tüm Kullanıcılar";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<div class="panel-heading">
+    <b>Tüm Kullanıcılar </b>
+    @if (@TempData["add"] != null)
+    {
+        <b>(Kullanıcı Başarıyla Eklendi!)</b>
+    }
+    @if (@TempData["edit"] != null)
+    {
+        <b>(Kullanıcı Başarıyla Düzenlendi!)</b>
+    }
+    <a class="btn-primary btn" href="@Url.Action("AddUser", "Admin")" style="float:right;text-decoration:none">Yeni Kullanıcı Ekle</a>
+</div>
+<div class="panel-body">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#admin" data-toggle="tab">Admin</a>
+        </li>
+        <li>
+            <a href="#normal" data-toggle="tab">Normal Kullanıcı</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="admin">
+            <div class="table-responsive" style="margin-top:10px;">
+                <table class="table table-striped table-bordered table-hover" id="myTable">
+                    <thead>
+                        <tr>
+                            <th>Ünvanı</th>
+                            <th>Kullanıcı Adı</th>
+                            <th>Şifresi</th>
+                            <th>Notları</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Where(a => a.tip == "1"))
+                        {
+                            <tr>
+                                <td>@item.title</td>
+                                <td>@item.username</td>
+                                <td>@item.password</td>
+                                <td>@item.note</td>
+                                <td><a href="@Url.Action("UserAccount", "Admin", new { userId = @item.UserId })" target="_blank">Düzenle</a></td>
+                                <td><a href="#" onclick="KullaniciSil(@item.UserId)">Sil</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="normal">
+            <div class="table-responsive" style="margin-top:10px;">
+                <table class="table table-striped table-bordered table-hover" id="myTable2">
+                    <thead>
+                        <tr>
+                            <th>Ünvanı</th>
+                            <th>Kullanıcı Adı</th>
+                            <th>Şifresi</th>
+                            <th>Notları</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Where(a => a.tip == "2"))
+                        {
+                            <tr>
+                                <td>@item.title</td>
+                                <td>@item.username</td>
+                                <td>@item.password</td>
+                                <td>@item.note</td>
+                                <td><a href="@Url.Action("UserAccount", "Admin", new { userId = @item.UserId })" target="_blank">Düzenle</a></td>
+                                <td><a href="#" onclick="KullaniciSil(@item.UserId)">Sil</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var table, table2;
+    $(document).ready(function () {
+        table = $('#myTable').DataTable({
+            "lengthMenu": [[5, 10, 20, -1], [5, 10, 20, "Hepsi"]],
+            "order": [[1, "desc"]],
+            language: {
+                search: "Ara: ",
+                sInfo: " _START_ ve _END_ arasından toplam _TOTAL_ tane gösteriliyor",
+                sLengthMenu: "_MENU_ tane göster",
+                sEmptyTable: "Hiç Bir Sonuç Bulunamadı",
+                paginate: {
+                    previous: "Geri",
+                    next: "İleri",
+                },
+                sZeroRecords: "Hiç Bir Sonuç Bulunamadı",
+                sEmptyTable: "Eşleşen Sonuç Yok",
+                sInfoFiltered: "(Filtrelenen toplam _MAX_ taneden)",
+                sInfoEmpty: "0 sonuç gösteriliyor"
+            },
+        });
+        table2 = $('#myTable2').DataTable({
+            "lengthMenu": [[5, 10, 20, -1], [5, 10, 20, "Hepsi"]],
+            "order": [[1, "desc"]],
+            language: {
+                search: "Ara: ",
+                sInfo: " _START_ ve _END_ arasından toplam _TOTAL_ tane gösteriliyor",
+                sLengthMenu: "_MENU_ tane göster",
+                sEmptyTable: "Hiç Bir Sonuç Bulunamadı",
+                paginate: {
+                    previous: "Geri",
+                    next: "İleri",
+                },
+                sZeroRecords: "Hiç Bir Sonuç Bulunamadı",
+                sEmptyTable: "Eşleşen Sonuç Yok",
+                sInfoFiltered: "(Filtrelenen toplam _MAX_ taneden)",
+                sInfoEmpty: "0 sonuç gösteriliyor"
+            },
+        });
+    });
+
+    function KullaniciSil(id) {
+        if (confirm('Kullanıcı silinsin mi?')) {
+            var turId = id;
+            jQuery.ajax({
+                url: '@Url.Action("DeleteUser", "Admin")',
+                data: { id: turId }
+            }).done(function (val) {
+                if (val == "yes") {
+                    alert("Kaydedildi.");
+                    location.reload(true);
+                }
+                else { alert("Bir Hata Oluştu!"); location.reload(true); }
+            });
+        }
+        else { }
+    }
+</script>

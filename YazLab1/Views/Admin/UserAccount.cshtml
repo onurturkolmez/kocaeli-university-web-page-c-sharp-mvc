@@ -1,0 +1,67 @@
+﻿@model YazLab1.Models.UserModel
+
+@{
+    ViewBag.Title = "Kullanıcı Ayarları";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+
+<div class="panel-heading">
+    <b>Kullanıcı Ayarları</b>
+</div>
+
+@*<input id="id" type="hidden" value="@Model.UserId" />*@
+@using (Ajax.BeginForm("UserAccount", "Admin", new AjaxOptions { OnSuccess = "onSuccess", UpdateTargetId = "parentDiv" }, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.AntiForgeryToken()
+    
+    @Html.HiddenFor(model => model.userId)
+
+    <div id="parentDiv" class="panel-body col-lg-4">
+        <div class="form-group">
+            <p class="help-block"><b>Ünvan</b></p>
+            @Html.TextBoxFor(model => model.title, new { @class="form-control",@placeholder="Ünvan"})
+            @Html.ValidationMessageFor(model => model.title, null, new { @class="help-inline"})
+        </div>
+
+        <div class="form-group">
+            <p class="help-block"><b>Kullanıcı Adı</b></p>
+            @*<input id="username" class="form-control" placeholder="Kullanıcı Adı" value="@Model.username">*@
+            @Html.TextBoxFor(model => model.username, new { @class = "form-control", @placeholder = "Kullanıcı Adı" })
+            @Html.ValidationMessageFor(model => model.username, null, new { @class = "help-inline" })
+        </div>
+        <div class="form-group">
+            <p class="help-block"><b>Şifre</b></p>
+            @*<input id="password" class="form-control" placeholder="Şifre" value="@Model.password">*@
+            @Html.TextBoxFor(model => model.password, new { @class = "form-control", @placeholder = "Şifre" })
+            @Html.ValidationMessageFor(model => model.password, null, new { @class = "help-inline" })
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-success btn-lg btn-block" value="Kaydet" />
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    function onSuccess(result) {
+        $.validator.unobtrusive.parse($(result));
+    }
+</script>
+
+@*<script>
+    function save() {
+        var id = $('#id').val();
+        var username = $('#username').val();
+        var password = $('#password').val();
+        var unvan = $('#unvan').val();
+        jQuery.ajax({
+            url: 'Url.Action("UserSettingSave","Admin")',
+            data: { ID: id, username: username, password: password, unvan: unvan }
+        }).done(function (val) {
+            if (val == "basarili") { alert("Bilgiler Kaydedildi"); location.pathname = "Admin/Login"; }
+            else { alert("bir hata oluştu"); location.pathname = "Admin/Panel"; }
+        });
+    }
+</script>*@

@@ -1,0 +1,522 @@
+﻿@model Tuple<List<YazLab1.Models.Data.Models.Announcement>, List<YazLab1.Models.Data.Models.SliderItem>, List<YazLab1.Models.Data.Models.User>>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Kocaeli Üniversitesi Bilgisayar Mühendisliği</title>
+    <link rel="shortcut icon" href="~/img/icon.ico">
+    <link href="~/HomeContent/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/AdminContent/font-awesome/css/font-awesome.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <img id="banner_m" class="img-responsive" src="~/img/banner03.png" alt="">
+            </div>
+        </div>
+        <nav class="navbar navbar-inverse navbar-static-top" role="navigation" style="margin-bottom: 0px;background-color:green">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+                <style>
+                    .navbar-inverse .navbar-nav > li > a {
+                        color: #fff;
+                    }
+
+                        .navbar-inverse .navbar-nav > li > a:hover {
+                            font-size: 19px;
+                        }
+
+                    .searchLi {
+                        margin-left: 10px;
+                        margin-top: 10px;
+                    }
+                </style>
+
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a onclick="show();" href="#" class="dropdown-toggle fa fa-search" data-toggle="dropdown"></a>
+                            <ul id="searchBar" class="dropdown-menu" style="width:425px;display:none;background-color:rgb(51, 122, 183)">
+                                @using (Html.BeginForm("AramaSonucu", "Home", FormMethod.Post, new { onSubmit = "goster();" }))
+                                {
+                                    <div id="parentDiv" class="panel-body col-lg-12">
+                                        <div class="form-group">
+                                            <label class="form-inline">
+                                                Anahtar Kelime:
+                                            </label>
+                                            <input name="k" id="k" class="form-control" type="text" placeholder="Anahtar Kelimeyi Buraya Yaz" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-inline">
+                                                Akademisyen:
+                                            </label>
+                                            <select class="form-control" name="o" id="o">
+                                                <option value="all">Tüm Akademisyenler</option>
+                                                @foreach (var item in Model.Item3)
+                                                {
+                                                    <option value="@item.title">@item.title</option>
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-inline">
+                                                Sıralama:
+                                            </label>
+                                            <select class="form-control" id="s" name="s">
+                                                <option value="ye">Yeniden Eskiye</option>
+                                                <option value="ey">Eskiden Yeniye</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-inline">
+                                                Duyuru Tipi:
+                                            </label>
+                                            <select class="form-control" id="t" name="t">
+                                                <option value="1">Genel Duyurular</option>
+                                                <option value="2">Bölüm Duyuruları</option>
+                                                <option value="3">Haber ve Etkinlikler</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" onclick="ara();" class="btn btn-success form-control"><i class="fa fa-search"> Ara</i></button>
+                                            @*<input onclick="ara();" type="submit" class="btn btn-success form-control" value="Ara" />*@
+                                        </div>
+                                    </div>
+                                }
+                            </ul>
+                        </li>
+                        <li><a href="#">Anasayfa</a></li>
+                        <li><a href="#">Hakkımızda</a></li>
+                        <li><a href="#">Yönetim</a></li>
+                        <li><a href="#">Araştırma</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Personel <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a target="_blank" href="@Url.Action("Login","Admin")">Sisteme Giriş</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Lisans</a></li>
+                        <li><a href="#">Y.Lisans/Doktora</a></li>
+                        <li><a href="#">Mezunlar</a></li>
+                        <li><a href="#">İletişim/Ulaşım</a></li>
+                        <li><a href="#">3DNavi</a></li>
+                        <li><a href="#">English</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    </div>
+
+    <script type="text/javascript">
+        function show() {
+            if ($("#searchBar").css("display") == "none") {
+                $("#searchBar").show();
+            } else {
+                $("#searchBar").hide();
+            }
+        }
+    </script>
+
+    <div class="container">
+        <div id="slider1_container" style="visibility: hidden; position: relative; margin: 0 auto; width: 1140px; height: 442px; overflow: hidden;">
+            <!-- Loading Screen -->
+            <div u="loading" style="position: absolute; top: 0px; left: 0px;">
+                <div style="filter: alpha(opacity=70); opacity:0.7; position: absolute; display: block;
+
+                background-color: #000; top: 0px; left: 0px;width: 100%; height:100%;">
+                </div>
+                <div style="position: absolute; display: block; background: url(../img/loading.gif) no-repeat center center;
+
+                top: 0px; left: 0px;width: 100%;height:100%;">
+                </div>
+            </div>
+
+            <style>
+                .carousel-caption {
+                    background-color: black;
+                    padding-bottom: 0;
+                    padding-top: 0;
+                }
+            </style>
+            <!-- Slider -->
+            <div u="slides" style="position: absolute; left: 0px; top: 0px; width: 1140px; height: 442px;
+            overflow: hidden;">
+                @foreach (var item in @Model.Item2)
+                {
+
+                    <div>
+                        <a target="_blank" href="@item.url">
+                            <img u="image" src="@item.imageUrl" />
+                            <div class="carousel-caption" style="opacity:0.5;margin-bottom:15px;">
+                                <h3 style="color:white;">@item.baslik </h3>
+                                <p style="color:white;">@item.yazi</p>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+            <style>
+                .jssorb05 {
+                    position: absolute;
+                }
+
+                    .jssorb05 div, .jssorb05 div:hover, .jssorb05 .av {
+                        position: absolute;
+                        /* size of bullet elment */
+                        width: 16px;
+                        height: 16px;
+                        background: url(../img/b05.png) no-repeat;
+                        overflow: hidden;
+                        cursor: pointer;
+                    }
+
+                    .jssorb05 div {
+                        background-position: -7px -7px;
+                    }
+
+                        .jssorb05 div:hover, .jssorb05 .av:hover {
+                            background-position: -37px -7px;
+                        }
+
+                    .jssorb05 .av {
+                        background-position: -67px -7px;
+                    }
+
+                    .jssorb05 .dn, .jssorb05 .dn:hover {
+                        background-position: -97px -7px;
+                    }
+            </style>
+            <div u="navigator" class="jssorb05" style="bottom: 16px; right: 6px;margin-bottom:-17px;">
+                <!-- bullet navigator item prototype -->
+                <div u="prototype"></div>
+            </div>
+            <style>
+                .jssora11l, .jssora11r {
+                    display: block;
+                    position: absolute;
+                    /* size of arrow element */
+                    width: 37px;
+                    height: 37px;
+                    cursor: pointer;
+                    background: url(../img/a11.png) no-repeat;
+                    overflow: hidden;
+                }
+
+                .jssora11l {
+                    background-position: -11px -41px;
+                }
+
+                .jssora11r {
+                    background-position: -71px -41px;
+                }
+
+                .jssora11l:hover {
+                    background-position: -131px -41px;
+                }
+
+                .jssora11r:hover {
+                    background-position: -191px -41px;
+                }
+
+                .jssora11l.jssora11ldn {
+                    background-position: -251px -41px;
+                }
+
+                .jssora11r.jssora11rdn {
+                    background-position: -311px -41px;
+                }
+            </style>
+            <!-- Sol ok -->
+            <span u="arrowleft" class="jssora11l" style="top: 123px; left: 8px;">
+            </span>
+            <!-- Sağ ok -->
+            <span u="arrowright" class="jssora11r" style="top: 123px; right: 8px;">
+            </span>
+        </div>
+    </div>
+
+    <style>
+        h2.featurette-heading {
+            text-align: center;
+            color: green;
+        }
+
+        p.featurette-heading {
+            text-align: center;
+        }
+    </style>
+
+    <div class="container marketing">
+        <hr class="featurette-divider">
+        <div class="row featurette">
+            <div class="col-md-6">
+                <h2 class="featurette-heading">Genel Duyurular</h2>
+                @if (@Model.Item1.Where(a => a.tip == "1").FirstOrDefault() != null)
+                {
+                    foreach (var item in @Model.Item1.Where(d => d.tip == "1"))
+                    {
+            <div class="panel panel-primary genel">
+                <div class="panel-heading">
+                    <a href="#" style="color:#fff" data-value="@item.AnnouncementId">
+                        <i class="fa fa-comments"></i>
+                        @item.DuyuruBasligi
+                    </a>
+                </div>
+                <div class="panel-footer">
+                    <span>
+                        <b>
+                            <i class="fa fa-user"></i>
+                            @item.Olusturan
+                        </b>
+                    </span>
+                    <span style="float:right">
+                        <i class="fa fa-calendar"></i>
+                        @DateTime.ParseExact(@item.CreateDate, "dd.MM.yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).ToString("dd MMMM dddd")
+                    </span>
+                </div>
+            </div>
+                    }
+
+            <button id="moreGenel" type="button" class="btn btn-success btn-block">Daha Fazla Yükle</button>
+                }
+                else
+                {
+            <p class="featurette-heading">Henüz Yeni Duyuru Yok</p>
+                }
+            </div>
+
+            <div class="col-md-6">
+                <h2 class="featurette-heading">Bölüm Duyuruları</h2>
+
+                @if (@Model.Item1.Where(d => d.tip == "2").FirstOrDefault() != null)
+                {
+                    foreach (var item in @Model.Item1.Where(d => d.tip == "2"))
+                    {
+            <div class="panel panel-primary bolum">
+                <div class="panel-heading">
+                    <a href="#" style="color:#fff" data-value="@item.AnnouncementId">
+                        <i class="fa fa-comments"></i>
+                        @item.DuyuruBasligi
+                    </a>
+                </div>
+                <div class="panel-footer">
+                    <span>
+                        <b>
+                            <i class="fa fa-user"></i>
+                            @item.Olusturan
+                        </b>
+                    </span>
+                    <span style="float:right">
+                        <i class="fa fa-calendar"></i>
+                        @DateTime.ParseExact(@item.CreateDate, "dd.MM.yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).ToString("dd MMMM dddd")
+                    </span>
+                </div>
+            </div>
+                    }
+
+            <button id="moreBolum" type="button" class="btn btn-success btn-block">Daha Fazla Yükle</button>
+                }
+                else
+                {
+            <p class="featurette-heading">Henüz Yeni Duyuru Yok</p>
+                }
+
+                <h2 class="featurette-heading">Haber ve Etkinlikler</h2>
+
+                @if (@Model.Item1.Where(d => d.tip == "3").FirstOrDefault() != null)
+                {
+                    foreach (var item in @Model.Item1.Where(d => d.tip == "3"))
+                    {
+            <div class="panel panel-primary haber">
+                <div class="panel-heading">
+                    <a href="#" style="color:#fff" data-value="@item.AnnouncementId">
+                        <i class="fa fa-comments"></i>
+                        @item.DuyuruBasligi
+                    </a>
+                </div>
+                <div class="panel-footer">
+                    <span>
+                        <b>
+                            @item.Olusturan
+                        </b>
+                    </span>
+                    <span style="float:right">
+                        <i class="fa fa-calendar"></i>
+                        @DateTime.ParseExact(@item.CreateDate, "dd.MM.yy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).ToString("dd MMMM dddd")
+                    </span>
+                </div>
+            </div>
+                    }
+
+            <button id="moreHaber" type="button" class="btn btn-success btn-block">Daha Fazla Yükle</button>
+                }
+                else
+                {
+            <p class="featurette-heading">Henüz Yeni Duyuru Yok</p>
+                }
+            </div>
+        </div>
+
+        <!-- footer -->
+        <footer>
+            <p class="pull-right"><a href="#" class="fa fa-arrow-up">Başa Dön</a></p>
+            <div class="row">
+                <div class="panel panel-default col-md-12">
+                    <div class="panel-footer" style="background-color:#fff;">
+                        <p>
+                            Adres: KOÜ Mühendislik Fakültesi (B Blok) Bilgisayar Mühendisliği Umuttepe Yerleşkesi 41380 Kocaeli<br>
+                            Tel: +90 (262) 303 35 60<br>
+                            E-Posta: bilgisayar@kocaeli.edu.tr<br>
+                            Web: http://bilgisayar.kocaeli.edu.tr
+                            <br>
+                            YazLab Grubu : <a href="#">Onur TÜRKÖLMEZ 100201085</a> / <a href="#">Serhat Yeğin 090201039</a>  / <a href="#">Cem Karaaslan</a>  / <a href="#">Melike Sever</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div class="modal fade modal-wide" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document" style="">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .panel-primary {
+            display: none;
+        }
+    </style>
+
+    <!-- /.container -->
+    <script src="~/HomeContent/jquery-1.9.1.min.js"></script>
+    <script src="~/HomeContent/bootstrap.min.js"></script>
+    <script src="~/HomeContent/docs.min.js"></script>
+    <script src="~/HomeContent/ie10-viewport-bug-workaround.js"></script>
+    <script src="~/HomeContent/jssor.slider.mini.js"></script>
+
+    <script>
+        $(function () {
+            $(".genel").slice(0, 4).show();
+            $(".bolum").slice(0, 4).show();
+            $(".haber").slice(0, 4).show();
+            $("#moreGenel").on('click', function (e) {
+                e.preventDefault();
+                $(".genel:hidden").slice(0, 1).slideDown();
+                if ($("genel:hidden").length == 0) {
+                    $("#load").fadeOut('slow');
+                }
+                $('html,body').animate({
+                    scrollTop: $(this).offset().top
+                }, 1500);
+            });
+            $("#moreBolum").on('click', function (e) {
+                e.preventDefault();
+                $(".bolum:hidden").slice(0, 1).slideDown();
+                if ($("bolum:hidden").length == 0) {
+                    $("#load").fadeOut('slow');
+                }
+                $('html,body').animate({
+                    scrollTop: $(this).offset().top
+                }, 1500);
+            });
+            $("#moreHaber").on('click', function (e) {
+                e.preventDefault();
+                $(".haber:hidden").slice(0, 1).slideDown();
+                if ($("haber:hidden").length == 0) {
+                    $("#load").fadeOut('slow');
+                }
+                $('html,body').animate({
+                    scrollTop: $(this).offset().top
+                }, 1500);
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.panel-heading > a').click(function () {
+                var id = $(this).data("value");
+                $('.modal-content').load("/Home/DuyuruPopup/" + id,
+                    function () {
+                        $('#myModal').modal("show");
+                    });
+            });
+        });
+    </script>
+
+    <script>
+        jQuery(document).ready(function ($) {
+            var options = {
+                $AutoPlay: true,
+                $AutoPlaySteps: 1,
+                $Idle: 2000,
+                $PauseOnHover: 1,
+                $ArrowKeyNavigation: true,
+                $SlideEasing: $JssorEasing$.$EaseOutQuint,
+                $SlideDuration: 800,
+                $MinDragOffsetToSlide: 20,
+                //$SlideWidth: 600,
+                //$SlideHeight: 300,
+                $SlideSpacing: 0,
+                $Cols: 1,
+                $ParkingPosition: 0,
+                $UISearchMode: 1,
+                $PlayOrientation: 1,
+                $DragOrientation: 1,
+
+                $ArrowNavigatorOptions: {
+                    $Class: $JssorArrowNavigator$,
+                    $ChanceToShow: 2,
+                    $AutoCenter: 2,
+                    $Steps: 1,
+                    $Scale: false
+                },
+
+                $BulletNavigatorOptions: {
+                    $Class: $JssorBulletNavigator$,
+                    $ChanceToShow: 2,
+                    $AutoCenter: 1,
+                    $Steps: 1,
+                    $Rows: 1,
+                    $SpacingX: 12,
+                    $SpacingY: 4,
+                    $Orientation: 1,
+                    $Scale: false
+                }
+            };
+
+            var jssor_slider1 = new $JssorSlider$("slider1_container", options);
+
+            function ScaleSlider() {
+                var parentWidth = jssor_slider1.$Elmt.parentNode.clientWidth;
+                if (parentWidth) {
+                    jssor_slider1.$ScaleWidth(parentWidth - 30);
+                }
+                else
+                    window.setTimeout(ScaleSlider, 30);
+            }
+            ScaleSlider();
+
+            $(window).bind("load", ScaleSlider);
+            $(window).bind("resize", ScaleSlider);
+            $(window).bind("orientationchange", ScaleSlider);
+            //responsive code end
+        });
+    </script>
+</body>
+</html>

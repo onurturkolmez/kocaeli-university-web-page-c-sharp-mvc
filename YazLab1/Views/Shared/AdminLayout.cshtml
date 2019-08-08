@@ -1,0 +1,170 @@
+﻿@{
+    Layout = null;
+}
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+
+    <script src="~/Scripts/jquery-1.8.0.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+    <!-- Core CSS - Include with every page -->
+    <link href="~/AdminContent/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/AdminContent/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="~/AdminContent/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="~/AdminContent/css/plugins/timeline/timeline.css" rel="stylesheet">
+    <link href="~/AdminContent/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
+    <link href="~/AdminContent/css/sb-admin.css" rel="stylesheet">
+    <script src="~/AdminContent/js/jquery-1.10.2.js"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+    <script src="~/AdminContent/js/bootstrap.min.js"></script>
+    <script src="~/AdminContent/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/AdminContent/js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="~/AdminContent/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+    <script src="~/AdminContent/js/ckeditor/ckeditor.js"></script>
+    <script src="~/AdminContent/js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="~/AdminContent/js/plugins/morris/morris.js"></script>
+    <script src="~/AdminContent/js/sb-admin.js"></script>
+
+</head>
+
+<body>
+    <style>
+        .field-validation-error {
+            color: #ff0000;
+        }
+    </style>
+
+    <div id="wrapper">
+
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @*<a class="navbar-brand" href="@Url.Action("Index","Home")" target="_blank" style="background-image:url('/img/logo.png');"> bilgisayar.kocaeli.edu.tr</a>*@
+                <a target="_blank" class="dropdown-toggle" href="@Url.Action("Index","Home")">
+                    <img src="~/img/logo.png" width="40" height="40" />
+                    <span>bilgisayar.kocaeli.edu.tr</span>
+                </a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span>Hoşgeldin @Session["Title"].ToString()</span>
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li>
+                            <a href="@Url.Action("UserAccount", "Admin", new { userId = Session["LogedUserID"].ToString() })"><i class="fa fa-gear fa-fw"></i> Ayarlar</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#" onclick="logOut()"><i class="fa fa-sign-out fa-fw"></i> Çıkış</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li>
+                            <a href="#"><i class="fa fa-comment"></i>Duyurular<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="@Url.Action("Announcements", "Admin")"><i class="icons icon-right-dir"></i>Tüm Duyurular</a></li>
+                                <li><a href="@Url.Action("AddAnnouncement", "Admin")"><i class="icons icon-right-dir"></i>Duyuru Ekle</a></li>
+                                @*<li><a href="@Url.Action("","Admin")"><i class="icons icon-right-dir"></i>Giriş Ekranındaki Turlar</a></li>*@
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-picture-o"></i>Slider<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    @if (Session["Type"].ToString() == "1")
+                                    {
+                                        <a href="@Url.Action("SliderItems", "Admin")">Sliderda Gözüken Resimler</a>
+                                    }
+                                    <a href="@Url.Action("AddSliderItem", "Admin")">Yeni Slider Resmi Ekle</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-user"></i>Kullanıcı<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    @if (Session["Type"].ToString() == "1")
+                                    {
+                                        <a href="@Url.Action("Users", "Admin")">Tüm Kullanıcılar</a>
+                                        <a href="@Url.Action("AddUser", "Admin")">Yeni Kullanıcı Ekle</a>
+                                    }
+                                    @if (Session["Type"].ToString() == "2")
+                                    {
+                                        <a href="@Url.Action("UserAccount", "Admin", new { userId = Session["LogedUserID"].ToString() })">Kullanıcı Ayarları</a>
+                                    }
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-sticky-note-o"></i>Notlar<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Notes", "Admin")">Notlarım</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <!-- Core Scripts - Include with every page -->
+
+
+</body>
+
+</html>
+
+
+<script>
+    function logOut() {
+        jQuery.ajax({
+            url: '@Url.Action("LogOut", "Admin")',
+        }).done(function (msg) {
+            if (msg) {
+                location.pathname = "Home/Index";
+            } else {
+                location.pathname = "Admin/Announcements";
+            }
+        });
+    }
+</script>
